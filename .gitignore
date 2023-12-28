@@ -1,0 +1,22 @@
+target/
+Cargo.lock
+
+# IDE/Editor
+.idea/
+.vscode/
+*.swp
+
+# Generated Files
+*.rs.bk
+
+# Tests
+**/target/
+**/Cargo.lock
+**/Cargo.toml.orig
+**/Cargo.toml.rej
+
+# Build cache
+**/.cargo/
+
+# Mac OS
+.DS_Store
