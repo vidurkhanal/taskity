@@ -5,12 +5,12 @@ use crate::app::App;
 pub fn update(app: &mut App, key_event: KeyEvent) {
     match key_event.code {
         KeyCode::Esc | KeyCode::Char('q') => app.quit(),
-        KeyCode::Char('c') | KeyCode::Char('C') => {
+        KeyCode::Char('r') | KeyCode::Char('R') => {
             if key_event.modifiers == KeyModifiers::CONTROL {
-                app.quit()
+                app.context.system.refresh_all();
             }
         }
-        KeyCode::Char('r') | KeyCode::Char('R') => {
+        KeyCode::Char('c') | KeyCode::Char('C') => {
             if key_event.modifiers == KeyModifiers::CONTROL {
                 app.quit()
             }
@@ -24,6 +24,16 @@ pub fn update(app: &mut App, key_event: KeyEvent) {
                 app.context.tab_index = 0;
             } else {
                 app.context.tab_index += 1;
+            }
+        }
+        KeyCode::Up | KeyCode::Char('k') => {
+            if app.context.row_index > 0 {
+                app.context.row_index -= 1;
+            }
+        }
+        KeyCode::Down | KeyCode::Char('j') => {
+            if app.context.row_index < app.context.system.processes().len() - 1 {
+                app.context.row_index += 1;
             }
         }
         // KeyCode::Right | KeyCode::Char('j') => app.increment_counter(),
