@@ -61,27 +61,44 @@ impl Root<'_> {
     }
 
     fn render_selected_tab(&self, area: Rect, buf: &mut Buffer) {
+        let area = layout(area, Direction::Horizontal, vec![0, 1]);
         let row_index = self.context.row_index;
+        let processes = &self
+            .context
+            .system
+            .processes()
+            .iter()
+            .map(|(_, process)| process)
+            .collect::<Vec<_>>();
         match self.context.tab_index {
-            0 => ProcessesTab::new(row_index).render(area, buf),
-            1 => PortsTab::new(row_index).render(area, buf),
-            2 => AboutTab::new(row_index).render(area, buf),
-            // 1 => RecipeTab::new(row_index).render(area, buf),
-            // 2 => EmailTab::new(row_index).render(area, buf),
-            // 3 => TracerouteTab::new(row_index).render(area, buf),
-            // 4 => WeatherTab::new(row_index).render(area, buf),
+            0 => ProcessesTab::new(&self.context, processes).render(area[0], buf),
+            1 => PortsTab::new(row_index).render(area[0], buf),
+            2 => AboutTab::new(row_index).render(area[0], buf),
             _ => unreachable!(),
         };
     }
 
     fn render_bottom_bar(&self, area: Rect, buf: &mut Buffer) {
-        let keys = [
-            ("Q/Esc", "Quit"),
-            ("Tab", "Next Tab"),
-            ("↑/k", "Up"),
-            ("↓/j", "Down"),
-            ("ctrl+r", "Refresh"),
-        ];
+        let keys = match self.context.tab_index {
+            0 => vec![
+                ("Q/Esc", "Quit"),
+                ("Tab", "Next Tab"),
+                ("↑/k", "Up"),
+                ("↓/j", "Down"),
+                ("ctrl+r", "Force Refresh"),
+                ("ctrl+x", "Kill Process"),
+            ],
+            1 => vec![
+                ("Q/Esc", "Quit"),
+                ("Tab", "Next Tab"),
+                ("↑/k", "Up"),
+                ("↓/j", "Down"),
+                ("ctrl+r", "Force Refresh"),
+                ("ctrl+x", "Kill Port"),
+            ],
+            2 => vec![("Q/Esc", "Quit"), ("Tab", "Next Tab")],
+            _ => vec![],
+        };
         let spans: Vec<Span> = keys
             .iter()
             .flat_map(|(key, desc)| {
