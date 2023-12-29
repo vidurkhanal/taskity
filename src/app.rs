@@ -1,34 +1,28 @@
-#[derive(Debug, Default)]
 pub struct App {
-    /// should the application exit?
     pub should_quit: bool,
-    /// counter
-    pub counter: u8,
+    pub context: AppContext,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct AppContext {
+    pub tab_index: usize,
+    pub row_index: usize,
 }
 
 impl App {
     /// Constructs a new instance of [`App`].
     pub fn new() -> Self {
-        Self::default()
+        Self {
+            should_quit: false,
+            context: AppContext {
+                tab_index: 0,
+                row_index: 0,
+            },
+        }
     }
-
-    /// Handles the tick event of the terminal.
-    pub fn tick(&self) {}
 
     /// Set should_quit to true to quit the application.
     pub fn quit(&mut self) {
         self.should_quit = true;
-    }
-
-    pub fn increment_counter(&mut self) {
-        if let Some(res) = self.counter.checked_add(1) {
-            self.counter = res;
-        }
-    }
-
-    pub fn decrement_counter(&mut self) {
-        if let Some(res) = self.counter.checked_sub(1) {
-            self.counter = res;
-        }
     }
 }

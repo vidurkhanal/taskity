@@ -8,7 +8,7 @@ use crossterm::{
 
 pub type CrosstermTerminal = ratatui::Terminal<ratatui::backend::CrosstermBackend<std::io::Stderr>>;
 
-use crate::{app::App, event::EventHandler, ui};
+use crate::{app::App, event::EventHandler, root::Root, ui};
 
 /// Representation of a terminal user interface.
 ///
@@ -71,7 +71,8 @@ impl Tui {
     /// [`Draw`]: tui::Terminal::draw
     /// [`rendering`]: crate::ui:render
     pub fn draw(&mut self, app: &mut App) -> Result<()> {
-        self.terminal.draw(|frame| ui::render(app, frame))?;
+        self.terminal
+            .draw(|frame| frame.render_widget(Root::new(&app.context), frame.size()))?;
         Ok(())
     }
 }

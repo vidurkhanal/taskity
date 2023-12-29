@@ -1,5 +1,8 @@
 mod app;
+mod constants;
 mod event;
+mod root;
+mod tabs;
 mod tui;
 mod ui;
 mod update;
